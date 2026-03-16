@@ -149,8 +149,8 @@ export default function EditJobPage({ params }: { params: Promise<{ companyId: s
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <p className="text-lg font-semibold">Job not found</p>
         <p className="mt-1 text-sm text-muted-foreground">This job does not exist or you don&apos;t have access.</p>
-        <Link href={`/companies/${companyId}/jobs`} className="mt-4 text-sm text-blue-600 hover:text-blue-500">
-          â† Back to Jobs
+        <Link href={`/companies/${companyId}/jobs`} className="mt-4 text-sm text-primary hover:text-primary-hover">
+          ← Back to Jobs
         </Link>
       </div>
     );
@@ -423,7 +423,7 @@ export default function EditJobPage({ params }: { params: Promise<{ companyId: s
                 {selectedQuestionBank ? (
                   <div className="mt-3 space-y-3">
                     <div className="rounded-xl border border-amber-300/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
-                      âš ï¸ Questions are copied at job creation time. Editing this question bank later will NOT affect this job.
+                      Questions are copied at job creation time. Editing this question bank later will NOT affect this job.
                     </div>
                     <div className="rounded-xl border border-border/40 bg-background px-4 py-3 text-sm text-muted-foreground">
                       {selectedQuestionBank.questions_json.length} question{selectedQuestionBank.questions_json.length === 1 ? '' : 's'} will be attached.
@@ -436,7 +436,7 @@ export default function EditJobPage({ params }: { params: Promise<{ companyId: s
                     ) : (
                       <>
                         No question banks found. Create one first in
-                        <Link href={`/companies/${companyId}/question-banks`} className="ml-1 text-blue-600 hover:text-blue-500">
+                        <Link href={`/companies/${companyId}/question-banks`} className="ml-1 text-primary hover:text-primary-hover">
                           Question Banks
                         </Link>
                         .
@@ -460,7 +460,7 @@ export default function EditJobPage({ params }: { params: Promise<{ companyId: s
             <Button
               type="submit"
               disabled={updating}
-              className="bg-linear-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25"
+              className="bg-primary hover:bg-primary-hover text-white shadow-lg shadow-blue-500/25"
             >
               {updating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
               Save Changes

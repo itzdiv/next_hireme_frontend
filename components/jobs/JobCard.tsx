@@ -20,14 +20,13 @@ function formatDeadline(deadline: string | null): string | null {
 interface JobCardProps {
   job: JobListing;
   hasApplied?: boolean;
-  isAuthenticated?: boolean;
 }
 
-export default function JobCard({ job, hasApplied = false, isAuthenticated: _isAuthenticated = false }: JobCardProps) {
+export default function JobCard({ job, hasApplied = false }: JobCardProps) {
   const deadlineText = formatDeadline(job.application_deadline);
 
   return (
-    <Card className="group border-border/40 bg-card transition-all duration-300 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-0.5 h-full">
+    <Card className="group border-border/40 bg-card transition-all duration-300 hover:border-primary-border hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-0.5 h-full">
       <CardContent className="p-6 flex flex-col h-full">
           {/* Top row */}
           <div className="flex items-start justify-between gap-3 mb-3">
@@ -39,14 +38,14 @@ export default function JobCard({ job, hasApplied = false, isAuthenticated: _isA
 
           {/* Company name */}
           {job.company_name && (
-            <span className="text-xs font-medium text-blue-600 mb-1 uppercase tracking-wider">
+            <span className="text-xs font-medium text-primary mb-1 uppercase tracking-wider">
               {job.company_name}
             </span>
           )}
 
           {/* Title */}
           <Link href={`/jobs/${job.id}`} className="group/title">
-            <h3 className="text-lg font-semibold transition-colors line-clamp-1 group-hover/title:text-blue-600">
+            <h3 className="text-lg font-semibold transition-colors line-clamp-1 group-hover/title:text-primary">
               {job.title}
             </h3>
           </Link>
@@ -90,17 +89,17 @@ export default function JobCard({ job, hasApplied = false, isAuthenticated: _isA
           </div>
 
           <div className="mt-4 flex items-center justify-between gap-3 pt-4 border-t border-border/40">
-            <Link href={`/jobs/${job.id}`} className="text-sm font-medium text-blue-600 hover:text-blue-700">
+            <Link href={`/jobs/${job.id}`} className="text-sm font-medium text-primary hover:text-primary-hover">
               View Details
             </Link>
             {hasApplied ? (
-              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE] flex items-center gap-1">
+              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-primary-light text-primary-text border border-primary-border flex items-center gap-1">
                 Applied
               </span>
             ) : (
               <Link
                 href={`/jobs/${job.id}`}
-                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-[#2563EB] text-white hover:bg-[#1D4ED8] transition-colors"
+                className="px-3 py-1.5 rounded-lg text-xs font-medium bg-primary text-white hover:bg-primary-hover transition-colors"
               >
                 View Job →
               </Link>

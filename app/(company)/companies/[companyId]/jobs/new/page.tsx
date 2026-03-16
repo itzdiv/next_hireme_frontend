@@ -130,8 +130,8 @@ export default function NewJobPage({ params }: { params: Promise<{ companyId: st
         <Card className="border-border/40">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10">
-                <Briefcase className="h-4.5 w-4.5 text-blue-600" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-light">
+                <Briefcase className="h-4.5 w-4.5 text-primary" />
               </div>
               <div>
                 <CardTitle className="text-base">Job Details</CardTitle>
@@ -384,7 +384,7 @@ export default function NewJobPage({ params }: { params: Promise<{ companyId: st
                 {selectedQuestionBank ? (
                   <div className="mt-4 space-y-3">
                     <div className="rounded-xl border border-amber-300/50 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
-                      âš ï¸ Questions are copied at job creation time. Editing this question bank later will NOT affect this job.
+                      Questions are copied at job creation time. Editing this question bank later will NOT affect this job.
                     </div>
                     <div className="rounded-xl border border-border/40 bg-background p-4">
                       <div className="flex items-center justify-between gap-3">
@@ -405,7 +405,7 @@ export default function NewJobPage({ params }: { params: Promise<{ companyId: st
                     ) : (
                       <>
                         No question banks found. Create one first in
-                        <Link href={`/companies/${companyId}/question-banks`} className="ml-1 text-blue-600 hover:text-blue-500">
+                        <Link href={`/companies/${companyId}/question-banks`} className="ml-1 text-primary hover:text-primary-hover">
                           Question Banks
                         </Link>
                         .

@@ -60,7 +60,7 @@ function EmptyApplicationsState({
         <button
           type="button"
           onClick={onClearFilter}
-          className="text-sm text-blue-600 hover:text-blue-500"
+          className="text-sm text-primary hover:text-primary-hover"
         >
           Show all applications
         </button>

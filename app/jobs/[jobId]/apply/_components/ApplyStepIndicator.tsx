@@ -29,8 +29,8 @@ export function ApplyStepIndicator({ step, steps, onStepClick }: ApplyStepIndica
                 disabled={!isClickable}
                 className={cn(
                   'flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-all',
-                  isComplete && 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer',
-                  isCurrent && 'bg-blue-600 text-white ring-4 ring-blue-600/20 cursor-default',
+                  isComplete && 'bg-primary text-white hover:bg-primary-hover cursor-pointer',
+                  isCurrent && 'bg-primary text-white ring-4 ring-primary/20 cursor-default',
                   !isComplete && !isCurrent && 'bg-muted text-muted-foreground cursor-default',
                 )}
               >
@@ -40,7 +40,7 @@ export function ApplyStepIndicator({ step, steps, onStepClick }: ApplyStepIndica
                 className={cn(
                   'hidden text-xs font-medium sm:block',
                   isCurrent && 'text-foreground',
-                  isComplete && 'text-blue-600',
+                  isComplete && 'text-primary',
                   !isComplete && !isCurrent && 'text-muted-foreground',
                 )}
               >
@@ -52,7 +52,7 @@ export function ApplyStepIndicator({ step, steps, onStepClick }: ApplyStepIndica
               <div
                 className={cn(
                   'mx-3 mb-5 h-px w-16 sm:w-24 transition-colors',
-                  isComplete ? 'bg-blue-600' : 'bg-border',
+                  isComplete ? 'bg-primary' : 'bg-border',
                 )}
               />
             )}

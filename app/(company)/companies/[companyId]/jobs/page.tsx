@@ -114,7 +114,7 @@ export default function CompanyJobsPage({ params }: { params: Promise<{ companyI
     return (
       <>
         <div className="rounded-xl border border-border/40 bg-card">
-          <div className="overflow-x-auto">
+          <div className="max-h-[65vh] overflow-x-auto overflow-y-auto">
           <table className="w-full min-w-160 text-sm text-left">
             <thead className="bg-muted/50 text-muted-foreground uppercase text-xs tracking-wider">
               <tr>
@@ -134,7 +134,7 @@ export default function CompanyJobsPage({ params }: { params: Promise<{ companyI
                 return (
                   <tr key={job.id} className="hover:bg-accent/30 transition-colors">
                     <td className="px-6 py-4">
-                      <p className="font-semibold truncate max-w-50 lg:max-w-xs">{job.title}</p>
+                      <p className="font-semibold whitespace-normal wrap-break-word max-w-50 lg:max-w-xs">{job.title}</p>
                       <p className="text-xs text-muted-foreground mt-0.5 md:hidden">
                         {job.location || 'Remote'}
                       </p>
@@ -254,7 +254,7 @@ export default function CompanyJobsPage({ params }: { params: Promise<{ companyI
             variant={statusFilter === status ? 'default' : 'outline'}
             className={`cursor-pointer transition-all text-xs py-1.5 px-3 ${
               statusFilter === status
-                ? 'bg-blue-600 text-white hover:bg-blue-700 border-transparent'
+                ? 'bg-primary text-white hover:bg-primary-hover border-transparent'
                 : 'hover:bg-accent border-border/60'
             }`}
             onClick={() => setStatusFilter(status)}

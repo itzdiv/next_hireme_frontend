@@ -63,7 +63,7 @@ export function CandidateApplicationCard({ application, onWithdraw }: CandidateA
       <div className="flex flex-col gap-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3 min-w-0">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-base font-bold text-blue-600">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary-light text-base font-bold text-primary-text border border-primary-border/60">
               {job.company_name?.[0]?.toUpperCase() ?? '?'}
             </div>
 
@@ -104,11 +104,13 @@ export function CandidateApplicationCard({ application, onWithdraw }: CandidateA
             <span className="text-xs font-medium uppercase tracking-wide text-primary-text">
               Recruiter Feedback
             </span>
-            {visibleComments.map((comment) => (
-              <p key={comment.id} className="text-sm text-blue-700">
-                &quot;{comment.comment}&quot;
-              </p>
-            ))}
+            <ul className="list-disc pl-5 space-y-1">
+              {visibleComments.map((comment) => (
+                <li key={comment.id} className="text-sm text-primary">
+                  {comment.comment}
+                </li>
+              ))}
+            </ul>
           </div>
         ) : null}
 
@@ -119,7 +121,7 @@ export function CandidateApplicationCard({ application, onWithdraw }: CandidateA
         ) : null}
 
         {application.status === ApplicationStatus.REJECTED ? (
-          <div className="rounded-lg border bg-muted px-4 py-3 text-sm text-muted-foreground">
+          <div className="rounded-lg border border-[#FECACA] bg-[#FFE2E2] px-4 py-3 text-sm text-[#991B1B]">
             This application was not selected. Keep applying!
           </div>
         ) : null}
@@ -153,7 +155,7 @@ export function CandidateApplicationCard({ application, onWithdraw }: CandidateA
                   href={application.video_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-500"
+                  className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
                 >
                   Watch Video <ExternalLink className="h-3.5 w-3.5" />
                 </a>

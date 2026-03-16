@@ -23,11 +23,12 @@ import {
   Plus, LayoutDashboard, Check, ChevronsUpDown,
 } from 'lucide-react';
 import type { MemberRole, MyCompanyMembership } from '@/types';
+import { MemberStatus } from '@/types';
 
 function RoleTag({ role }: { role: MemberRole }) {
   const colors: Record<MemberRole, string> = {
     OWNER: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
-    ADMIN: 'bg-blue-500/15 text-blue-700 dark:text-blue-400',
+    ADMIN: 'bg-primary-light text-primary-text dark:text-primary',
     RECRUITER: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
   };
   return (
@@ -124,14 +125,14 @@ function CompanySwitcher({
               <DropdownMenuItem
                 key={company.company_id}
                 onClick={() => onSelect(company.company_id)}
-                className={`flex items-center gap-3 py-2.5 ${isActive ? 'bg-blue-500/5' : ''}`}
+                className={`flex items-center gap-3 py-2.5 ${isActive ? 'bg-primary-light' : ''}`}
               >
                 <CompanyAvatar name={company.company_name} logoUrl={company.company_logo_url} size={28} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{company.company_name}</p>
                   <RoleTag role={company.role} />
                 </div>
-                {isActive && <Check className="h-4 w-4 text-blue-600 shrink-0" />}
+                {isActive && <Check className="h-4 w-4 text-primary shrink-0" />}
               </DropdownMenuItem>
             );
           })}
@@ -220,7 +221,7 @@ export default function Navbar() {
   };
 
   const showAuth = isHydrated;
-  const activeMembershipCompanies = myCompanies.filter((company) => company.status === 'ACTIVE');
+  const activeMembershipCompanies = myCompanies.filter((company) => company.status === MemberStatus.ACTIVE);
   const hasCompanies = activeMembershipCompanies.length > 0;
   const hasActiveCompany =
     !!activeCompanyId && activeMembershipCompanies.some((company) => company.company_id === activeCompanyId);
@@ -283,7 +284,7 @@ export default function Navbar() {
                     onClick={() => setMobileOpen(false)}
                     className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                       pathname === link.href || pathname.startsWith(link.href + '/')
-                        ? 'bg-blue-500/10 text-blue-700'
+                        ? 'bg-primary-light text-primary-text'
                         : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                     }`}
                   >
@@ -311,7 +312,7 @@ export default function Navbar() {
                               }}
                               className={`flex min-h-9 w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 ${
                                 isActive
-                                  ? 'bg-blue-500/10 text-blue-700'
+                                  ? 'bg-primary-light text-primary-text'
                                   : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                               }`}
                             >
@@ -320,7 +321,7 @@ export default function Navbar() {
                                 <span className="block truncate" title={company.company_name}>{company.company_name}</span>
                                 <RoleTag role={company.role} />
                               </div>
-                              {isActive && <Check className="h-4 w-4 text-blue-600 shrink-0" />}
+                              {isActive && <Check className="h-4 w-4 text-primary shrink-0" />}
                             </button>
                           );
                         })}
@@ -367,7 +368,7 @@ export default function Navbar() {
           </Sheet>
 
           <Link href={showAuth && isAuthenticated ? '/jobs' : '/'} className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-blue-600 to-blue-700 shadow-lg shadow-blue-500/25">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-blue-500/25">
               <Briefcase className="h-5 w-5 text-white" />
             </div>
             <span className="text-xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">

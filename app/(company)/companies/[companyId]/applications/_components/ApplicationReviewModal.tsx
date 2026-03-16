@@ -89,12 +89,12 @@ function CommentsList({ comments }: { comments: ApplicationComment[] }) {
             <span className="text-sm font-medium">{comment.user_email ?? 'Team Member'}</span>
             <div className="flex items-center gap-2">
               {comment.visible_to_candidate ? (
-                <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs text-blue-700">
-                  ðŸ‘¤ Visible to candidate
+                <span className="rounded-full border border-primary-border bg-primary-light px-2 py-0.5 text-xs text-primary-text">
+                  Visible to candidate
                 </span>
               ) : (
                 <span className="rounded-full border bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                  ðŸ”’ Internal
+                  Internal
                 </span>
               )}
               <span className="text-xs text-muted-foreground">
@@ -255,7 +255,7 @@ export function ApplicationReviewModal({ companyId, application, isOpen, onClose
               onClick={() => setActiveTab('application')}
               className={`border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
                 activeTab === 'application'
-                  ? 'border-blue-600 text-foreground'
+                  ? 'border-primary text-foreground'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -266,7 +266,7 @@ export function ApplicationReviewModal({ companyId, application, isOpen, onClose
               onClick={() => setActiveTab('comments')}
               className={`ml-3 border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
                 activeTab === 'comments'
-                  ? 'border-blue-600 text-foreground'
+                  ? 'border-primary text-foreground'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -317,7 +317,7 @@ export function ApplicationReviewModal({ companyId, application, isOpen, onClose
                 {localApplication.application_mode === ApplicationMode.QUESTIONNAIRE ? (
                   <section className="flex flex-col gap-3 rounded-lg border p-4">
                     <h3 className="flex items-center gap-2 text-sm font-semibold">
-                      <ClipboardList className="h-4 w-4 text-blue-600" />
+                      <ClipboardList className="h-4 w-4 text-primary" />
                       Screening Answers
                     </h3>
                     {answersRows[0]?.id === '__empty' ? (

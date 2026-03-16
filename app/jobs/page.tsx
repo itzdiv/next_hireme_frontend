@@ -161,7 +161,6 @@ export default function JobsPage() {
                   key={job.id}
                   job={job}
                   hasApplied={appliedJobIds.has(job.id)}
-                  isAuthenticated={isAuthenticated && isHydrated}
                 />
               ))}
             </div>

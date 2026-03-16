@@ -30,7 +30,7 @@ import type { CandidateApplication, JobListing } from '@/types';
 import { ApplicationMode, JobStatus } from '@/types';
 
 const modeLabels = {
-  [ApplicationMode.STANDARD]: { label: 'Resume Only', icon: FileText, color: 'text-blue-600 bg-blue-50' },
+  [ApplicationMode.STANDARD]: { label: 'Resume Only', icon: FileText, color: 'text-primary bg-primary-light' },
   [ApplicationMode.QUESTIONNAIRE]: { label: 'Resume + Questions', icon: HelpCircle, color: 'text-amber-600 bg-amber-50' },
   [ApplicationMode.VIDEO]: { label: 'Resume + Video', icon: Video, color: 'text-[#1E40AF] bg-[#EFF6FF]' },
 };
@@ -419,7 +419,7 @@ export default function JobDetailPage({ params }: { params: Promise<{ jobId: str
           <CompanyAvatar companyName={job.company_name ?? ''} logoUrl={job.company_logo_url} size="lg" />
           <div>
             {job.company_name ? (
-              <p className="text-sm font-semibold uppercase tracking-wide text-blue-600">{job.company_name}</p>
+              <p className="text-sm font-semibold uppercase tracking-wide text-primary">{job.company_name}</p>
             ) : null}
             <h1 className="text-3xl font-bold tracking-tight">{job.title}</h1>
           </div>

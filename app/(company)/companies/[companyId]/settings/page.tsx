@@ -138,7 +138,7 @@ export default function CompanySettingsPage({ params }: { params: Promise<{ comp
         <Card className="border-border/40">
           <CardHeader>
             <div className="flex items-start gap-4">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-light text-primary">
                 <Building2 className="h-5 w-5" />
               </div>
               <div>
@@ -223,7 +223,7 @@ export default function CompanySettingsPage({ params }: { params: Promise<{ comp
                         aria-label="Company logo preview"
                       />
                     ) : (
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500/15 to-indigo-500/15 text-blue-600">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500/15 to-blue-500/5 text-primary">
                         <Building2 className="h-7 w-7" />
                       </div>
                     )}
@@ -247,6 +247,7 @@ export default function CompanySettingsPage({ params }: { params: Promise<{ comp
                 variant="outline"
                 onClick={() => setDraft(null)}
                 disabled={saving || draft === null}
+                className="min-w-28"
               >
                 Reset
               </Button>

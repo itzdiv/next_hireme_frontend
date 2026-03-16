@@ -41,7 +41,7 @@ interface ApplyStepContentProps {
   onGoToJobs: () => void;
 }
 
-// â”€â”€â”€ Step 1: Resume Selection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Step 1: Resume Selection
 
 function ResumeSelectionStep({
   loadingResumes,
@@ -102,13 +102,13 @@ function ResumeSelectionStep({
                   className={cn(
                     'w-full rounded-lg border px-4 py-3 text-left transition-all',
                     isSelected
-                      ? 'border-[#BFDBFE] bg-[#EFF6FF] ring-1 ring-[#BFDBFE]'
-                      : 'border-border hover:border-[#BFDBFE] hover:bg-muted/40',
+                      ? 'border-primary-border bg-primary-light ring-1 ring-primary-border'
+                      : 'border-border hover:border-primary-border hover:bg-muted/40',
                   )}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <FileText className={cn('h-5 w-5 shrink-0', isSelected ? 'text-[#1E40AF]' : 'text-muted-foreground')} />
+                      <FileText className={cn('h-5 w-5 shrink-0', isSelected ? 'text-primary-text' : 'text-muted-foreground')} />
                       <div>
                         <p className="text-sm font-medium">
                           {resume.title ?? resume.file_name ?? 'Resume'}
@@ -128,7 +128,7 @@ function ResumeSelectionStep({
                         </Badge>
                       )}
                       {isSelected && (
-                        <CheckCircle2 className="h-5 w-5 text-[#1E40AF]" />
+                        <CheckCircle2 className="h-5 w-5 text-primary-text" />
                       )}
                     </div>
                   </div>
@@ -142,7 +142,7 @@ function ResumeSelectionStep({
   );
 }
 
-// â”€â”€â”€ Step 2: Details (Questionnaire / Video / Standard) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Step 2: Details (Questionnaire / Video / Standard)
 
 function DetailsStep({
   isQuestionnaireMode,
@@ -200,7 +200,7 @@ function DetailsStep({
       <Card>
         <CardContent className="p-6">
           <div className="mb-4 flex items-center gap-2">
-            <Video className="h-5 w-5 text-[#1E40AF]" />
+            <Video className="h-5 w-5 text-primary-text" />
             <h2 className="text-lg font-semibold">Video introduction</h2>
           </div>
           <p className="mb-5 text-sm text-muted-foreground">
@@ -226,7 +226,7 @@ function DetailsStep({
                 onVideoUrlChange(e.target.value);
                 if (e.target.value) onClearVideoError();
               }}
-              placeholder="https://youtube.com/watch?v=â€¦"
+              placeholder="https://youtube.com/watch?v=..."
             />
           </div>
         </CardContent>
@@ -237,7 +237,7 @@ function DetailsStep({
   return null;
 }
 
-// â”€â”€â”€ Step 3: Review â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Step 3: Review
 
 function ReviewStep({
   selectedResume,
@@ -291,7 +291,7 @@ function ReviewStep({
             <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">Resume</p>
             {selectedResume ? (
               <div className="flex items-center gap-3 rounded-lg border border-border/60 bg-muted/30 px-4 py-3">
-                <FileText className="h-5 w-5 shrink-0 text-[#1E40AF]" />
+                <FileText className="h-5 w-5 shrink-0 text-primary-text" />
                 <p className="text-sm font-medium">
                   {selectedResume.title ?? selectedResume.file_name ?? 'Resume'}
                 </p>
@@ -311,7 +311,7 @@ function ReviewStep({
             <div>
               <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">Video introduction</p>
               <div className="flex items-center gap-3 rounded-lg border border-border/60 bg-muted/30 px-4 py-3">
-                <Video className="h-5 w-5 shrink-0 text-[#1E40AF]" />
+                <Video className="h-5 w-5 shrink-0 text-primary-text" />
                 <p className="truncate text-sm">{videoUrl}</p>
               </div>
             </div>
@@ -324,7 +324,7 @@ function ReviewStep({
               <div className="space-y-3">
                 {questions.map((q) => {
                   const rawAnswer = answers[q.id];
-                  let displayAnswer = 'â€”';
+                  let displayAnswer = '-';
                   if (rawAnswer !== undefined && rawAnswer !== null && rawAnswer !== '') {
                     if (typeof rawAnswer === 'boolean') {
                       displayAnswer = rawAnswer ? 'Yes' : 'No';
@@ -348,7 +348,7 @@ function ReviewStep({
   );
 }
 
-// â”€â”€â”€ Step 4: Success â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Step 4: Success
 
 function SuccessStep({
   onGoToApplications,
@@ -377,7 +377,7 @@ function SuccessStep({
   );
 }
 
-// â”€â”€â”€ Main exported component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Main exported component
 
 export function ApplyStepContent(props: ApplyStepContentProps) {
   const { step, isStandardMode } = props;

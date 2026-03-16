@@ -138,8 +138,8 @@ export default function CompanyMembersPage({ params }: { params: Promise<{ compa
         </div>
         <CardContent className="p-5 flex-1 flex flex-col">
           <div className="flex items-center gap-3 mb-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-blue-500/10 to-indigo-500/10 shrink-0 border border-blue-500/10">
-              <span className="text-blue-600 font-bold text-lg">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-light shrink-0 border border-primary-border/60">
+              <span className="text-primary font-bold text-lg">
                 {member.email[0].toUpperCase()}
               </span>
             </div>
@@ -234,8 +234,8 @@ export default function CompanyMembersPage({ params }: { params: Promise<{ compa
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="sm:max-w-106.25">
           <DialogHeader>
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 mb-4">
-              <Mail className="h-6 w-6 text-blue-600" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-light mb-4">
+              <Mail className="h-6 w-6 text-primary" />
             </div>
             <DialogTitle>Invite Team Member</DialogTitle>
             <DialogDescription>

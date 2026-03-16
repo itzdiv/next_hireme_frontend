@@ -4,7 +4,7 @@ import { ApplicationStatus } from '@/types';
 const statusConfig: Record<ApplicationStatus, { label: string; className: string }> = {
   [ApplicationStatus.APPLIED]: { label: 'Applied', className: 'bg-primary-light text-primary-text border-primary-border' },
   [ApplicationStatus.ACCEPTED]: { label: 'Accepted', className: 'bg-[#DBFCE7] text-[#166534] border-[#BBF7D0]' },
-  [ApplicationStatus.REJECTED]: { label: 'Rejected', className: 'bg-muted text-muted-foreground border-border' },
+  [ApplicationStatus.REJECTED]: { label: 'Rejected', className: 'bg-[#FFE2E2] text-[#991B1B] border-[#FECACA]' },
   [ApplicationStatus.WITHDRAWN]: { label: 'Withdrawn by candidate', className: 'bg-muted text-muted-foreground border-border' },
 };
 

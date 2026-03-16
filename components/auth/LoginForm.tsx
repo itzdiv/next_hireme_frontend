@@ -29,7 +29,7 @@ export default function LoginForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
     try {
@@ -52,7 +52,7 @@ export default function LoginForm() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleLoginSubmit} className="space-y-5">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium text-foreground">
             Email
@@ -80,7 +80,7 @@ export default function LoginForm() {
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+              placeholder="********"
               value={password}
               onChange={(e) => { setPassword(e.target.value); setErrors((prev) => ({ ...prev, password: undefined })); }}
               className={`h-12 pl-10 pr-10 rounded-lg bg-muted/50 border-border/60 text-sm ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
@@ -109,7 +109,7 @@ export default function LoginForm() {
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{' '}
-        <Link href="/register" className="text-blue-600 hover:text-blue-500 font-medium transition-colors">
+        <Link href="/register" className="text-primary hover:text-primary-hover font-medium transition-colors">
           Create one
         </Link>
       </p>

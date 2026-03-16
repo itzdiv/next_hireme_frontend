@@ -62,13 +62,13 @@ export default function AuthLayout({
               </span>
             </h1>
             <p className="mt-4 text-lg text-white/60 leading-relaxed">
-              Connect with top companies and find your dream role â€” or discover exceptional talent for your team.
+              Connect with top companies and find your dream role — or discover exceptional talent for your team.
             </p>
           </div>
 
           {/* Footer */}
           <p className="text-sm text-white/30">
-            Â© 2025 HireMe. All rights reserved.
+            © 2025 HireMe. All rights reserved.
           </p>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default function AuthLayout({
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 bg-background">
         {/* Mobile logo */}
         <Link href="/" className="lg:hidden mb-8 flex items-center gap-2.5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-blue-600 to-blue-700 shadow-lg shadow-blue-500/25">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-blue-500/25">
             <Briefcase className="h-5 w-5 text-white" />
           </div>
           <span className="text-2xl font-bold">HireMe</span>

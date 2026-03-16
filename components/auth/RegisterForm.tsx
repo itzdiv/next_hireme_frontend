@@ -31,7 +31,7 @@ export default function RegisterForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleRegistrationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
     try {
@@ -52,7 +52,7 @@ export default function RegisterForm() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleRegistrationSubmit} className="space-y-5">
         <div className="space-y-2">
           <Label htmlFor="reg-email" className="text-sm font-medium text-foreground">
             Email
@@ -128,7 +128,7 @@ export default function RegisterForm() {
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
         Already have an account?{' '}
-        <Link href="/login" className="text-blue-600 hover:text-blue-500 font-medium transition-colors">
+        <Link href="/login" className="text-primary hover:text-primary-hover font-medium transition-colors">
           Sign in
         </Link>
       </p>

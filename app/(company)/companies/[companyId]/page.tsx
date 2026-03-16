@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Building2, Users, Briefcase, FileText, Plus, ArrowRight, Clock, TrendingUp, RefreshCcw } from 'lucide-react';
 import Link from 'next/link';
 import ApplicationStatusBadge from '@/components/applications/ApplicationStatusBadge';
+import { JobStatus, ApplicationStatus } from '@/types';
 
 export default function CompanyDashboardPage({ params }: { params: Promise<{ companyId: string }> }) {
   const { companyId } = use(params);
@@ -45,14 +46,14 @@ export default function CompanyDashboardPage({ params }: { params: Promise<{ com
   }
 
   const totalJobs = jobs?.meta.total || 0;
-  const activeJobs = jobs?.data.filter((j) => j.status === 'ACTIVE').length || 0;
+  const activeJobs = jobs?.data.filter((j) => j.status === JobStatus.ACTIVE).length || 0;
   const totalApps = applications?.meta.total || 0;
-  const pendingApps = applications?.data.filter((a) => a.status === 'APPLIED').length || 0;
+  const pendingApps = applications?.data.filter((a) => a.status === ApplicationStatus.APPLIED).length || 0;
 
   const metrics = [
     {
       title: 'Total Jobs',
-      value: loadingJobs ? 'â€”' : totalJobs,
+      value: loadingJobs ? '-' : totalJobs,
       subtitle: `${activeJobs} active`,
       icon: Briefcase,
       color: 'text-blue-500',
@@ -61,7 +62,7 @@ export default function CompanyDashboardPage({ params }: { params: Promise<{ com
     },
     {
       title: 'Active Jobs',
-      value: loadingJobs ? 'â€”' : activeJobs,
+      value: loadingJobs ? '-' : activeJobs,
       subtitle: 'Accepting applications',
       icon: TrendingUp,
       color: 'text-emerald-500',
@@ -70,7 +71,7 @@ export default function CompanyDashboardPage({ params }: { params: Promise<{ com
     },
     {
       title: 'Total Applications',
-      value: loadingApps ? 'â€”' : totalApps,
+      value: loadingApps ? '-' : totalApps,
       subtitle: 'All time',
       icon: FileText,
       color: 'text-indigo-500',
@@ -79,7 +80,7 @@ export default function CompanyDashboardPage({ params }: { params: Promise<{ com
     },
     {
       title: 'Pending Review',
-      value: loadingApps ? 'â€”' : pendingApps,
+      value: loadingApps ? '-' : pendingApps,
       subtitle: pendingApps > 0 ? 'Action needed' : 'All clear',
       icon: Clock,
       color: 'text-amber-500',
@@ -157,7 +158,7 @@ export default function CompanyDashboardPage({ params }: { params: Promise<{ com
           <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="text-base">Recent Applications</CardTitle>
             <Link href={`/companies/${companyId}/applications`}>
-              <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-500 text-xs">
+              <Button variant="ghost" size="sm" className="text-primary hover:text-primary-hover text-xs">
                 View All <ArrowRight className="ml-1 h-3.5 w-3.5" />
               </Button>
             </Link>
@@ -180,7 +181,7 @@ export default function CompanyDashboardPage({ params }: { params: Promise<{ com
               <div className="divide-y divide-border/40">
                 {applications.data.map((app) => (
                   <div key={app.id} className="flex items-center gap-3 px-6 py-3.5 hover:bg-accent/30 transition-colors">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 text-xs font-bold shrink-0">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-light text-primary text-xs font-bold shrink-0">
                       {(app.candidate_email || 'U')[0].toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">

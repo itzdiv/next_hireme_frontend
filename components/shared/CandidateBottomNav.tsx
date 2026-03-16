@@ -27,7 +27,7 @@ export default function CandidateBottomNav() {
               href={item.href}
               className={cn(
                 'flex flex-col items-center gap-1 px-3 py-1.5 rounded-lg transition-colors min-w-14',
-                isActive ? 'text-blue-600' : 'text-muted-foreground hover:text-foreground'
+                isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
               )}
             >
               <item.icon className="h-5 w-5" />

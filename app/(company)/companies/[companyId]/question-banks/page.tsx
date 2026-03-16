@@ -360,7 +360,7 @@ export default function QuestionBanksPage({ params }: { params: Promise<{ compan
         <Card className="border-border/40 xl:sticky xl:top-24 xl:self-start">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-light text-primary">
                 <Sparkles className="h-5 w-5" />
               </div>
               <div>
@@ -588,7 +588,7 @@ export default function QuestionBanksPage({ params }: { params: Promise<{ compan
             ) : null}
 
             <div className="flex items-center justify-end gap-3 border-t border-border/40 pt-4">
-              <Button type="button" variant="outline" onClick={handleCreateNew} disabled={saving}>
+              <Button type="button" variant="outline" onClick={handleCreateNew} disabled={saving} className="min-w-28">
                 Reset
               </Button>
               {editor.mode === 'edit' ? (

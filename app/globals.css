@@ -141,7 +141,7 @@
   }
 }
 
-/* â”€â”€â”€ Premium Gradient Button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Premium Gradient Button */
 .btn-gradient {
   @apply bg-primary hover:bg-primary-hover text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
 }
@@ -150,7 +150,7 @@
   filter: brightness(1.05);
 }
 
-/* â”€â”€â”€ Glassmorphic Panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Glassmorphic Panel */
 .glass {
   @apply bg-white/50 backdrop-blur-xl border-border/40;
 }
@@ -159,7 +159,7 @@
   @apply bg-white/5 backdrop-blur-xl border-white/10;
 }
 
-/* â”€â”€â”€ Status Badge Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Status Badge Styles */
 .badge-draft { @apply bg-gray-100 text-gray-700 border-gray-200; }
 .badge-active { @apply bg-[#DBFCE7] text-[#166534] border-[#BBF7D0]; }
 .badge-closed { @apply bg-[#FFE2E2] text-[#991B1B] border-[#FECACA]; }
@@ -171,14 +171,14 @@
 .badge-revoked { @apply bg-[#FFE2E2] text-[#991B1B] border-[#FECACA]; }
 .badge-owner { @apply bg-primary-light text-primary-text border-primary-border; }
 .badge-admin { @apply bg-indigo-50 text-indigo-700 border-indigo-200; }
-.badge-recruiter { @apply bg-blue-50 text-blue-700 border-blue-200; }
+.badge-recruiter { @apply bg-primary-light text-primary-text border-primary-border; }
 
-/* â”€â”€â”€ Premium Card Hover Effect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Premium Card Hover Effect */
 .card-hover {
   @apply transition-all duration-300 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-0.5;
 }
 
-/* â”€â”€â”€ Animate Shimmer for Skeletons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Animate Shimmer for Skeletons */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -190,7 +190,7 @@
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
-/* â”€â”€â”€ Scrollbar Styling â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -209,14 +209,14 @@
   background: oklch(0.7 0 0);
 }
 
-/* â”€â”€â”€ Focus Ring Enhancement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Focus Ring Enhancement */
 input:focus-visible, textarea:focus-visible, select:focus-visible, [role="combobox"]:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
   border-color: #2563EB;
 }
 
-/* â”€â”€â”€ Page Transition â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* Page Transition */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }

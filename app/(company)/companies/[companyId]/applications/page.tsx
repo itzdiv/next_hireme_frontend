@@ -65,7 +65,7 @@ export default function CompanyApplicationsPage({ params }: { params: Promise<{ 
                   <tr key={app.id} className="hover:bg-accent/30 transition-colors cursor-pointer" onClick={() => setSelectedApp(app)}>
                     <td className="px-4 md:px-6 py-3 md:py-4">
                       <div className="flex items-center gap-3">
-                        <div className="hidden sm:flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 text-xs font-bold shrink-0">
+                        <div className="hidden sm:flex h-8 w-8 items-center justify-center rounded-full bg-primary-light text-primary text-xs font-bold shrink-0">
                           {(app.candidate_email || 'U')[0].toUpperCase()}
                         </div>
                         <span className="font-semibold truncate max-w-37.5 sm:max-w-50">{app.candidate_email || 'Unknown Candidate'}</span>
