@@ -209,11 +209,17 @@ export interface CompanyApplication {
 
 /**
  * Full detail shape used when viewing a single application on the company side.
- * Includes screening questions for rendering the Q&A panel.
+ * Includes screening questions, candidate profile fields, and application mode.
+ * The four candidate_* fields come from the per-application detail endpoint and
+ * may be null if the candidate has not completed their profile.
  */
 export interface CompanyApplicationDetail extends CompanyApplication {
   application_mode: ApplicationMode;
   screening_questions_json: Question[] | null;
+  candidate_name: string | null;
+  candidate_linkedin_url: string | null;
+  candidate_portfolio_url: string | null;
+  candidate_phone: string | null;
 }
 
 export interface ApplicationComment {

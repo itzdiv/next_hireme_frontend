@@ -210,11 +210,17 @@ Understand recruiter-side company management end-to-end.
 5. `app/(company)/companies/[companyId]/jobs/[jobId]/page.tsx`
    - Includes status transitions + question bank snapshot selection behavior.
 
-### E4: Applications review (with resume download)
-1. `lib/api/applications.ts` (`listCompanyApplications`, `updateStatus`, `addComment`, `listComments`, `getApplicationResume`)
+### E4: Applications review (with resume download + candidate profile)
+1. `lib/api/applications.ts` (`listCompanyApplications`, `getCompanyApplicationDetail`, `updateStatus`, `addComment`, `listComments`, `getApplicationResume`)
+   - `getCompanyApplicationDetail(companyId, applicationId)` is a **standalone export** (not inside `applicationsApi`). It is called when the modal opens to fetch the full per-application detail, including `candidate_name`, `candidate_phone`, `candidate_linkedin_url`, and `candidate_portfolio_url`.
 2. `lib/hooks/useApplications.ts` (`useCompanyApplications`, `useComments`, `useUpdateApplicationStatus`, `useAddComment`, `useApplicationResumeDownload`)
 3. `app/(company)/companies/[companyId]/applications/page.tsx`
 4. `app/(company)/companies/[companyId]/applications/_components/ApplicationReviewModal.tsx`
+   - On open, fires `getCompanyApplicationDetail` into a `detail` state variable (separate from `localApplication` which comes from the list).
+   - Header shows `candidate_name` as the primary identifier when available, with email shown below it; falls back to email-only when name is null.
+   - Candidate Info section shows email (always), plus phone/LinkedIn/portfolio from `detail` (each null-guarded). Shows a "not added" message when all three are null.
+   - `ScreeningAnswersPanel` (internal function in the modal file) renders Q1/Q2-prefixed question + answer pairs with a "Not answered" fallback for missing answers.
+   - Detail fetch is non-critical: if it fails, the modal still fully works with list-level data (status, email, resume, screening answers already present in `localApplication`).
 
 ### E5: Members and roles
 1. `lib/api/company.ts` (`listMembers`, `inviteMember`, `updateMemberRole`, `revokeMember`, `transferOwnership`)

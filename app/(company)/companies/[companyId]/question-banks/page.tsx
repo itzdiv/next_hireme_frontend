@@ -587,19 +587,29 @@ export default function QuestionBanksPage({ params }: { params: Promise<{ compan
               </div>
             ) : null}
 
-            <div className="flex items-center justify-end gap-3 border-t border-border/40 pt-4">
-              <Button type="button" variant="outline" onClick={handleCreateNew} disabled={saving} className="min-w-28">
+            <div className="space-y-3 border-t border-border/40 pt-4">
+              {editor.mode === 'edit' ? (
+                <div className="flex justify-end">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleOpenSaveAsNew}
+                    disabled={saving || savingAsNew}
+                    className="w-full sm:w-auto"
+                  >
+                    Save as New Question Bank
+                  </Button>
+                </div>
+              ) : null}
+              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end">
+              <Button type="button" variant="destructive" onClick={handleCreateNew} disabled={saving} className="min-w-28">
                 Reset
               </Button>
-              {editor.mode === 'edit' ? (
-                <Button type="button" variant="outline" onClick={handleOpenSaveAsNew} disabled={saving || savingAsNew}>
-                  Save as New Question Bank
-                </Button>
-              ) : null}
               <Button type="button" className="btn-gradient min-w-36" onClick={handleSave} disabled={saving}>
                 {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                 {getSaveLabel()}
               </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -126,3 +126,19 @@ export const applicationsApi = {
     return res.data;
   },
 };
+
+/**
+ * GET /api/v1/companies/:companyId/applications/:applicationId
+ * Returns full application detail including screening questions
+ * and candidate profile information (name, phone, linkedin, portfolio).
+ * Guards: JWT + CompanyMembership
+ */
+export async function getCompanyApplicationDetail(
+  companyId: string,
+  applicationId: string
+): Promise<CompanyApplicationDetail> {
+  const res = await apiClient.get<CompanyApplicationDetail>(
+    `/v1/companies/${companyId}/applications/${applicationId}`
+  );
+  return res.data;
+}

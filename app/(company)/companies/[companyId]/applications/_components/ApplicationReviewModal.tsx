@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ApplicationStatusBadge from '@/components/applications/ApplicationStatusBadge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -17,6 +17,12 @@ import {
   Loader2,
 } from 'lucide-react';
 import {
+  Phone,
+  Linkedin,
+  Globe,
+  User,
+} from 'lucide-react';
+import {
   ApplicationMode,
   ApplicationStatus,
   CompanyApplicationDetail,
@@ -29,6 +35,7 @@ import {
   useComments,
   useUpdateApplicationStatus,
 } from '@/lib/hooks/useApplications';
+import { getCompanyApplicationDetail } from '@/lib/api/applications';
 import { toast } from 'sonner';
 
 interface ApplicationReviewModalProps {
@@ -40,37 +47,6 @@ interface ApplicationReviewModalProps {
 }
 
 type ReviewTab = 'application' | 'comments';
-
-function formatAnswer(answer: unknown): string {
-  if (answer === undefined || answer === null || answer === '') {
-    return 'Not answered';
-  }
-  if (typeof answer === 'boolean') {
-    return answer ? 'Yes' : 'No';
-  }
-  return String(answer);
-}
-
-function screeningAnswerRows(
-  questions: Question[],
-  answers: Record<string, unknown> | null,
-) {
-  if (questions.length === 0) {
-    return [
-      {
-        id: '__empty',
-        question: 'No screening questions configured on this job.',
-        answer: '',
-      },
-    ];
-  }
-
-  return questions.map((question) => ({
-    id: question.id,
-    question: question.question,
-    answer: formatAnswer(answers?.[question.id]),
-  }));
-}
 
 function CommentsList({ comments }: { comments: ApplicationComment[] }) {
   if (comments.length === 0) {
@@ -109,6 +85,53 @@ function CommentsList({ comments }: { comments: ApplicationComment[] }) {
   );
 }
 
+function ScreeningAnswersPanel({
+  questions,
+  answers,
+}: {
+  questions: Question[];
+  answers: Record<string, unknown>;
+}) {
+  if (questions.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        No screening questions were attached to this job.
+      </p>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      {questions.map((question, index) => {
+        const answer = answers[question.id];
+        const hasAnswer = answer !== undefined && answer !== null && answer !== '';
+        const isOptional = question.is_required === false;
+
+        return (
+          <div key={question.id} className="flex flex-col gap-1.5">
+            <div className="flex items-start gap-1.5">
+              <span className="mt-0.5 shrink-0 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Q{index + 1}
+              </span>
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <span className="text-sm font-medium leading-snug">{question.question}</span>
+                {isOptional && (
+                  <span className="text-xs text-muted-foreground">Optional</span>
+                )}
+              </div>
+            </div>
+            {hasAnswer ? (
+              <div className="ml-5 rounded-md bg-muted px-3 py-2 text-sm">{String(answer)}</div>
+            ) : (
+              <p className="ml-5 text-sm italic text-muted-foreground">Not answered</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ApplicationReviewModal({ companyId, application, isOpen, onClose, onRefresh }: ApplicationReviewModalProps) {
   const [activeTab, setActiveTab] = useState<ReviewTab>('application');
   const [newComment, setNewComment] = useState('');
@@ -116,6 +139,8 @@ export function ApplicationReviewModal({ companyId, application, isOpen, onClose
   const [commentError, setCommentError] = useState<string | null>(null);
   const [statusUpdating, setStatusUpdating] = useState(false);
   const [localApplication, setLocalApplication] = useState<CompanyApplicationDetail | null>(application);
+  const [detail, setDetail] = useState<CompanyApplicationDetail | null>(null);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
 
   const { data: comments = [], refetch: refetchComments } = useComments(
     companyId,
@@ -138,19 +163,39 @@ export function ApplicationReviewModal({ companyId, application, isOpen, onClose
     return () => window.clearTimeout(resetId);
   }, [application, isOpen]);
 
-  const answersRows = useMemo(() => {
-    if (!localApplication || localApplication.application_mode !== ApplicationMode.QUESTIONNAIRE) {
-      return [];
+  useEffect(() => {
+    if (!isOpen || !application) {
+      setDetail(null);
+      return;
     }
-    return screeningAnswerRows(
-      localApplication.screening_questions_json ?? [],
-      localApplication.answers_json,
-    );
-  }, [localApplication]);
+
+    const appId = application.id;
+    let cancelled = false;
+
+    async function loadDetail() {
+      try {
+        setIsLoadingDetail(true);
+        const data = await getCompanyApplicationDetail(companyId, appId);
+        if (!cancelled) {
+          setDetail(data);
+          setLocalApplication((current) => (current ? { ...current, ...data } : data));
+        }
+      } catch {
+        // Non-critical — modal still shows basic info without profile details
+      } finally {
+        if (!cancelled) setIsLoadingDetail(false);
+      }
+    }
+
+    void loadDetail();
+    return () => { cancelled = true; };
+  }, [isOpen, application?.id, companyId]);
 
   if (!localApplication) {
     return null;
   }
+
+  const resolvedApplication = detail ?? localApplication;
 
   const commentsCount = comments.length;
 
@@ -235,12 +280,23 @@ export function ApplicationReviewModal({ companyId, application, isOpen, onClose
 
             <div className="mt-3 flex items-center gap-3">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-lg font-semibold text-primary">
-                {localApplication.candidate_email?.[0]?.toUpperCase() ?? '?'}
+                {(detail?.candidate_name ?? localApplication.candidate_email)?.[0]?.toUpperCase() ?? '?'}
               </div>
               <div className="min-w-0 flex-1">
-                <DialogTitle className="break-all text-base font-semibold">
-                  {localApplication.candidate_email}
-                </DialogTitle>
+                {detail?.candidate_name ? (
+                  <>
+                    <DialogTitle className="truncate text-base font-semibold leading-tight">
+                      {detail.candidate_name}
+                    </DialogTitle>
+                    <span className="block truncate text-sm text-muted-foreground">
+                      {localApplication.candidate_email}
+                    </span>
+                  </>
+                ) : (
+                  <DialogTitle className="break-all text-base font-semibold">
+                    {localApplication.candidate_email}
+                  </DialogTitle>
+                )}
                 <span className="mt-0.5 flex items-center gap-1 text-sm text-muted-foreground">
                   <Briefcase className="h-3.5 w-3.5 shrink-0" />
                   <span className="wrap-break-word">{localApplication.job_title}</span>
@@ -282,14 +338,64 @@ export function ApplicationReviewModal({ companyId, application, isOpen, onClose
           <div className="min-h-0 flex-1 overflow-y-auto p-6">
             {activeTab === 'application' ? (
               <div className="flex flex-col gap-4">
-                <section className="flex flex-col gap-2 rounded-lg border p-4">
+                {/* ── CANDIDATE INFO ── */}
+                <section className="flex flex-col gap-3 rounded-lg border p-4">
                   <h3 className="flex items-center gap-2 text-sm font-semibold">
-                    <Mail className="h-4 w-4 text-primary" />
-                    Contact Info
+                    <User className="h-4 w-4 text-[#2563EB]" />
+                    Candidate Info
                   </h3>
-                  <p className="text-sm">{localApplication.candidate_email}</p>
+                  <div className="flex items-center gap-2.5 text-sm">
+                    <Mail className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <a
+                      href={`mailto:${localApplication.candidate_email}`}
+                      className="truncate text-[#2563EB] hover:underline"
+                    >
+                      {localApplication.candidate_email}
+                    </a>
+                  </div>
+                  {detail?.candidate_phone && (
+                    <div className="flex items-center gap-2.5 text-sm">
+                      <Phone className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <span>{detail.candidate_phone}</span>
+                    </div>
+                  )}
+                  {detail?.candidate_linkedin_url && (
+                    <div className="flex items-center gap-2.5 text-sm">
+                      <Linkedin className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <a
+                        href={detail.candidate_linkedin_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="truncate text-[#2563EB] hover:underline"
+                      >
+                        LinkedIn Profile
+                      </a>
+                    </div>
+                  )}
+                  {detail?.candidate_portfolio_url && (
+                    <div className="flex items-center gap-2.5 text-sm">
+                      <Globe className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <a
+                        href={detail.candidate_portfolio_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="truncate text-[#2563EB] hover:underline"
+                      >
+                        Portfolio / Website
+                      </a>
+                    </div>
+                  )}
+                  {isLoadingDetail && (
+                    <p className="text-xs text-muted-foreground">Loading profile details...</p>
+                  )}
+                  {!isLoadingDetail && detail && !detail.candidate_phone && !detail.candidate_linkedin_url && !detail.candidate_portfolio_url && (
+                    <p className="text-xs italic text-muted-foreground">
+                      Candidate has not added contact details to their profile.
+                    </p>
+                  )}
                 </section>
 
+                {/* ── RESUME ── */}
                 <section className="flex flex-col gap-2 rounded-lg border p-4">
                   <h3 className="flex items-center gap-2 text-sm font-semibold">
                     <FileText className="h-4 w-4 text-emerald-600" />
@@ -314,48 +420,46 @@ export function ApplicationReviewModal({ companyId, application, isOpen, onClose
                   )}
                 </section>
 
-                {localApplication.application_mode === ApplicationMode.QUESTIONNAIRE ? (
+                {/* ── SCREENING ANSWERS ── */}
+                {resolvedApplication.application_mode === ApplicationMode.QUESTIONNAIRE && (
                   <section className="flex flex-col gap-3 rounded-lg border p-4">
                     <h3 className="flex items-center gap-2 text-sm font-semibold">
-                      <ClipboardList className="h-4 w-4 text-primary" />
+                      <ClipboardList className="h-4 w-4 text-[#2563EB]" />
                       Screening Answers
                     </h3>
-                    {answersRows[0]?.id === '__empty' ? (
-                      <p className="text-sm text-muted-foreground">{answersRows[0].question}</p>
+                    {isLoadingDetail ? (
+                      <p className="text-sm text-muted-foreground">Loading answers...</p>
                     ) : (
-                      <div className="space-y-3">
-                        {answersRows.map((row) => (
-                          <div key={row.id} className="rounded-md border p-3">
-                            <p className="text-sm font-medium">Q: {row.question}</p>
-                            <p className="mt-1 text-sm text-muted-foreground">A: {row.answer}</p>
-                          </div>
-                        ))}
-                      </div>
+                      <ScreeningAnswersPanel
+                        questions={resolvedApplication.screening_questions_json ?? []}
+                        answers={resolvedApplication.answers_json ?? {}}
+                      />
                     )}
                   </section>
-                ) : null}
+                )}
 
-                {localApplication.application_mode === ApplicationMode.VIDEO ? (
+                {/* ── VIDEO SUBMISSION ── */}
+                {resolvedApplication.application_mode === ApplicationMode.VIDEO && (
                   <section className="flex flex-col gap-2 rounded-lg border p-4">
                     <h3 className="flex items-center gap-2 text-sm font-semibold">
                       <Video className="h-4 w-4 text-orange-600" />
                       Video Submission
                     </h3>
-                    {localApplication.video_url ? (
+                    {resolvedApplication.video_url ? (
                       <a
-                        href={localApplication.video_url}
+                        href={resolvedApplication.video_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group flex items-center justify-between rounded-md border px-3 py-2 text-sm transition-colors hover:bg-muted"
                       >
-                        <span>Watch Video</span>
+                        <span>Watch Candidate Video</span>
                         <ExternalLink className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
                       </a>
                     ) : (
                       <p className="text-sm text-muted-foreground">No video submitted</p>
                     )}
                   </section>
-                ) : null}
+                )}
               </div>
             ) : (
               <div className="flex h-full min-h-0 flex-col">

@@ -1,19 +1,10 @@
+"use client";
+
 import Link from 'next/link';
 import { Briefcase, Github, Linkedin, Twitter } from 'lucide-react';
-
-const SEEKER_LINKS = [
-  { label: 'Browse Jobs', href: '/jobs' },
-  { label: 'My Applications', href: '/applications' },
-  { label: 'Upload Resume', href: '/resumes' },
-  { label: 'Create Profile', href: '/profile' },
-];
-
-const COMPANY_LINKS = [
-  { label: 'Post a Job', href: '/companies' },
-  { label: 'Manage Applications', href: '/companies' },
-  { label: 'Build Your Team', href: '/companies' },
-  { label: 'Question Banks', href: '/companies' },
-];
+import { useMyCompanies } from '@/lib/hooks/useCompany';
+import { useAuthStore, useCompanyStore } from '@/lib/store';
+import { MemberStatus } from '@/types';
 
 const LEGAL_LINKS = [
   { label: 'Privacy Policy', href: '/privacy' },
@@ -28,7 +19,28 @@ const SOCIAL_LINKS = [
 ];
 
 export function PublicFooter() {
+  const { isAuthenticated, isHydrated } = useAuthStore();
+  const { activeCompanyId } = useCompanyStore();
+  const { data: myCompanies } = useMyCompanies();
   const year = new Date().getFullYear();
+  const activeMembershipCompanies = myCompanies.filter((company) => company.status === MemberStatus.ACTIVE);
+  const selectedCompanyId = activeMembershipCompanies.some((company) => company.company_id === activeCompanyId)
+    ? activeCompanyId
+    : activeMembershipCompanies[0]?.company_id ?? null;
+  const companySetupHref = '/companies/new';
+  const companyBaseHref = selectedCompanyId ? `/companies/${selectedCompanyId}` : companySetupHref;
+  const seekerLinks = [
+    { label: 'Browse Jobs', href: '/jobs' },
+    { label: 'My Applications', href: isHydrated && isAuthenticated ? '/applications' : '/login' },
+    { label: 'Upload Resume', href: isHydrated && isAuthenticated ? '/resumes' : '/login' },
+    { label: 'Create Profile', href: isHydrated && isAuthenticated ? '/profile' : '/register' },
+  ];
+  const companyLinks = [
+    { label: 'Post a Job', href: selectedCompanyId ? `${companyBaseHref}/jobs/new` : companySetupHref },
+    { label: 'Manage Applications', href: selectedCompanyId ? `${companyBaseHref}/applications` : companySetupHref },
+    { label: 'Build Your Team', href: selectedCompanyId ? `${companyBaseHref}/members` : companySetupHref },
+    { label: 'Question Banks', href: selectedCompanyId ? `${companyBaseHref}/question-banks` : companySetupHref },
+  ];
 
   return (
     <footer className="mt-auto bg-zinc-900 text-zinc-400">
@@ -47,8 +59,8 @@ export function PublicFooter() {
             <p className="text-xs text-zinc-500">© {year} HireMe. All rights reserved.</p>
           </div>
 
-          <FooterLinkColumn title="For Job Seekers" links={SEEKER_LINKS} />
-          <FooterLinkColumn title="For Companies" links={COMPANY_LINKS} />
+          <FooterLinkColumn title="For Job Seekers" links={seekerLinks} />
+          <FooterLinkColumn title="For Companies" links={companyLinks} />
           <FooterLinkColumn title="Company" links={LEGAL_LINKS} />
         </div>
       </div>

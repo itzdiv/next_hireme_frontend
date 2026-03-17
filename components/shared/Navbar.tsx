@@ -262,9 +262,11 @@ export default function Navbar() {
   ]);
 
   const isCompanyPage = pathname.startsWith('/companies/') && pathname !== '/companies/new';
+  const employerHref = '/companies/new';
 
   const navLinks = [
     { label: 'Browse Jobs', href: '/jobs', show: true },
+    { label: 'Employer', href: employerHref, show: true },
   ];
 
   return (
@@ -341,15 +343,6 @@ export default function Navbar() {
                       <User className="h-4 w-4" />
                       Profile
                     </Link>
-                    <Link
-                      href="/companies/new"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
-                    >
-                      <Plus className="h-4 w-4" />
-                      Create Company
-                    </Link>
-
                     <div className="my-2 border-t border-border/40" />
                     <button
                       onClick={() => {
@@ -388,21 +381,22 @@ export default function Navbar() {
           )}
         </div>
 
-        <div className="hidden md:flex items-center gap-1">
-          {navLinks.filter((l) => l.show).map((link) => (
-            <Link key={link.href} href={link.href}>
-              <Button
-                variant={pathname === link.href || pathname.startsWith(link.href + '/') ? 'secondary' : 'ghost'}
-                size="sm"
-                className="text-sm"
-              >
-                {link.label}
-              </Button>
-            </Link>
-          ))}
-        </div>
-
         <div className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.filter((l) => l.show).map((link) => (
+              <Link key={link.href} href={link.href}>
+                <Button
+                  variant={pathname === link.href || pathname.startsWith(link.href + '/') ? 'secondary' : 'ghost'}
+                  size="sm"
+                  className="text-sm"
+                >
+                  {link.label === 'Employer' ? <Building2 className="h-4 w-4" /> : null}
+                  {link.label}
+                </Button>
+              </Link>
+            ))}
+          </div>
+
           {!showAuth ? (
             <div className="w-24" />
           ) : isAuthenticated ? (
@@ -429,6 +423,10 @@ export default function Navbar() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={() => router.push('/profile')}>
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => router.push('/applications')}>
                       <Briefcase className="mr-2 h-4 w-4" />
                       My Applications

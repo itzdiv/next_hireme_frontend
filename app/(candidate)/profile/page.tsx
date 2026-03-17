@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useProfile, useCreateProfile, useUpdateProfile } from '@/lib/hooks/useCandidate';
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ export default function ProfilePage() {
   const { data: profile, loading, notFound, refetch } = useProfile();
   const { mutate: createProfile, loading: creating } = useCreateProfile();
   const { mutate: updateProfile, loading: updating } = useUpdateProfile();
-  const [isEditing, setIsEditing] = useState(shouldStartInEdit);
+  const [isEditing, setIsEditing] = useState(false);
 
   const [draft, setDraft] = useState<Partial<{
     full_name: string;
@@ -45,6 +45,12 @@ export default function ProfilePage() {
   const isCreateMode = notFound;
   const isReadOnly = !isCreateMode && !isEditing;
   const isFullNameValid = form.full_name.trim().length >= 2;
+
+  useEffect(() => {
+    if (shouldStartInEdit) {
+      setIsEditing(true);
+    }
+  }, [shouldStartInEdit]);
 
   /**
    * Submits the profile form in create or update mode based on profile existence.
