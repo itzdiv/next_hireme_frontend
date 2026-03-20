@@ -2,35 +2,8 @@ import { create } from 'zustand';
 
 // ─── Auth Store ──────────────────────────────────────────
 
-function readEmailFromToken(token: string | null): string | null {
-  if (!token || typeof window === 'undefined') {
-    return null;
-  }
-
-  try {
-    const payload = token.split('.')[1];
-
-    if (!payload) {
-      return null;
-    }
-
-    const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
-    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, '=');
-    const parsed = JSON.parse(window.atob(padded)) as Record<string, unknown>;
-    const email =
-      (typeof parsed.email === 'string' && parsed.email) ||
-      (typeof parsed.preferred_username === 'string' && parsed.preferred_username) ||
-      (typeof parsed.sub === 'string' && parsed.sub.includes('@') ? parsed.sub : null);
-
-    return email || null;
-  } catch {
-    return null;
-  }
-}
-
 interface AuthState {
   token: string | null;
-  email: string | null;
   fullName: string | null;
   photoUrl: string | null;
   hasAttemptedProfileLoad: boolean;
@@ -50,7 +23,6 @@ function getStoredToken(): string | null {
 
 export const useAuthStore = create<AuthState>((set) => ({
   token: null,
-  email: null,
   fullName: null,
   photoUrl: null,
   hasAttemptedProfileLoad: false,
@@ -61,7 +33,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.setItem('auth_token', token);
     set({
       token,
-      email: readEmailFromToken(token),
       fullName: null,
       photoUrl: null,
       hasAttemptedProfileLoad: false,
@@ -74,7 +45,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.removeItem('active_company_id');
     set({
       token: null,
-      email: null,
       fullName: null,
       photoUrl: null,
       hasAttemptedProfileLoad: false,
@@ -86,7 +56,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     const token = getStoredToken();
     set({
       token,
-      email: readEmailFromToken(token),
       fullName: null,
       photoUrl: null,
       hasAttemptedProfileLoad: false,

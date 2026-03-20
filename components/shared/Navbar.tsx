@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAuthStore, useCompanyStore } from '@/lib/store';
 import { useMyCompanies } from '@/lib/hooks/useCompany';
+import NotificationBell from '@/components/NotificationBell';
 import { SavedJobsButton } from '@/components/layout/SavedJobsButton';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
-  Briefcase, LogOut, User, Building2, ChevronDown, Menu,
+  Briefcase, LogOut, User, ChevronDown, Menu,
   Plus, LayoutDashboard, Check, ChevronsUpDown,
 } from 'lucide-react';
 import type { MemberRole, MyCompanyMembership } from '@/types';
@@ -108,7 +109,7 @@ function CompanySwitcher({
             </>
           ) : (
             <>
-              <Building2 className="h-4 w-4 text-muted-foreground" />
+              <Briefcase className="h-4 w-4 text-muted-foreground" />
               <span className="text-muted-foreground">Select Company</span>
             </>
           )}
@@ -168,9 +169,9 @@ function getSelectedCompanyId(params: {
   return null;
 }
 
-function ProfileAvatar({ email, photoUrl }: { email: string | null; photoUrl: string | null }) {
+function ProfileAvatar({ fullName, photoUrl }: { fullName: string | null; photoUrl: string | null }) {
   const [imgError, setImgError] = useState(false);
-  const initial = email?.[0]?.toUpperCase() ?? 'U';
+  const initial = fullName?.trim()?.[0]?.toUpperCase() ?? 'U';
 
   if (photoUrl && !imgError) {
     return (
@@ -199,7 +200,7 @@ function ProfileAvatar({ email, photoUrl }: { email: string | null; photoUrl: st
 }
 
 export default function Navbar() {
-  const { isAuthenticated, isHydrated, logout, email, photoUrl } = useAuthStore();
+  const { isAuthenticated, isHydrated, logout, fullName, photoUrl } = useAuthStore();
   const { activeCompanyId, setActiveCompany } = useCompanyStore();
   const { data: myCompanies, loading: myCompaniesLoading } = useMyCompanies();
   const pathname = usePathname();
@@ -262,11 +263,14 @@ export default function Navbar() {
   ]);
 
   const isCompanyPage = pathname.startsWith('/companies/') && pathname !== '/companies/new';
+  const isCompanyDashboardRoute = pathname.startsWith('/companies/');
   const employerHref = '/companies/new';
+  const hasAccessToken =
+    typeof window !== 'undefined' && !!(localStorage.getItem('auth_token') ?? localStorage.getItem('acess_token'));
 
   const navLinks = [
     { label: 'Browse Jobs', href: '/jobs', show: true },
-    { label: 'Employer', href: employerHref, show: true },
+    { label: 'For Employer', href: employerHref, show: true },
   ];
 
   return (
@@ -361,7 +365,7 @@ export default function Navbar() {
           </Sheet>
 
           <Link href={showAuth && isAuthenticated ? '/jobs' : '/'} className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-blue-500/25">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary shadow-lg">
               <Briefcase className="h-5 w-5 text-white" />
             </div>
             <span className="text-xl font-bold tracking-tight bg-linear-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
@@ -390,7 +394,6 @@ export default function Navbar() {
                   size="sm"
                   className="text-sm"
                 >
-                  {link.label === 'Employer' ? <Building2 className="h-4 w-4" /> : null}
                   {link.label}
                 </Button>
               </Link>
@@ -412,14 +415,16 @@ export default function Navbar() {
                 </Link>
               )}
 
+              {!isCompanyDashboardRoute && hasAccessToken && <NotificationBell />}
+
               <DropdownMenu>
                 <DropdownMenuTrigger className="ml-1 inline-flex min-h-9 items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-accent focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">
-                  <ProfileAvatar email={email} photoUrl={photoUrl} />
+                  <ProfileAvatar fullName={fullName} photoUrl={photoUrl} />
                   <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-64 border-border/40">
-                  <DropdownMenuLabel className="text-xs text-muted-foreground font-normal truncate" title={email ?? undefined}>
-                    {email ?? 'User'}
+                  <DropdownMenuLabel className="text-xs text-muted-foreground font-normal truncate" title={fullName ?? undefined}>
+                    {fullName ?? 'User'}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
