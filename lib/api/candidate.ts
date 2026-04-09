@@ -12,9 +12,7 @@ import type {
 
 export const candidateApi = {
   /**
-   * POST /api/v1/candidate/profile
    * Creates the authenticated user's candidate profile.
-   * Guards: JWT
    */
   createProfile: async (data: CreateProfileDto) => {
     const res = await apiClient.post<CandidateProfile>('/v1/candidate/profile', data);
@@ -22,9 +20,7 @@ export const candidateApi = {
   },
 
   /**
-   * GET /api/v1/candidate/profile
    * Fetches the authenticated user's candidate profile.
-   * Guards: JWT
    */
   getProfile: async () => {
     const res = await apiClient.get<CandidateProfile>('/v1/candidate/profile');
@@ -32,9 +28,7 @@ export const candidateApi = {
   },
 
   /**
-   * PATCH /api/v1/candidate/profile
    * Partially updates the authenticated user's candidate profile.
-   * Guards: JWT
    */
   updateProfile: async (data: UpdateProfileDto) => {
     const res = await apiClient.patch<CandidateProfile>('/v1/candidate/profile', data);
@@ -42,9 +36,7 @@ export const candidateApi = {
   },
 
   /**
-   * POST /api/v1/candidate/resumes
    * Uploads a new resume for the authenticated user.
-   * Guards: JWT
    */
   uploadResume: async (data: CreateResumeDto) => {
     const formData = new FormData();
@@ -65,9 +57,7 @@ export const candidateApi = {
   },
 
   /**
-   * GET /api/v1/candidate/resumes
    * Lists resumes owned by the authenticated user.
-   * Guards: JWT
    */
   listResumes: async (params?: PaginationParams) => {
     const res = await apiClient.get<PaginatedResponse<Resume>>(
@@ -78,9 +68,7 @@ export const candidateApi = {
   },
 
   /**
-   * GET /api/v1/candidate/resumes/:resumeId/download
    * Returns a signed download URL for a candidate resume.
-   * Guards: JWT
    */
   downloadResume: async (resumeId: string) => {
     const res = await apiClient.get<SignedDownloadResponse>(
@@ -90,9 +78,7 @@ export const candidateApi = {
   },
 
   /**
-   * PATCH /api/v1/candidate/resumes/:resumeId/primary
    * Marks the given resume as primary for the authenticated user.
-   * Guards: JWT
    */
   setResumePrimary: async (resumeId: string) => {
     const res = await apiClient.patch<Resume>(
@@ -102,9 +88,7 @@ export const candidateApi = {
   },
 
   /**
-   * DELETE /api/v1/candidate/resumes/:resumeId
    * Deletes a resume owned by the authenticated user.
-   * Guards: JWT
    */
   deleteResume: async (resumeId: string) => {
     const res = await apiClient.delete<{ message: string }>(

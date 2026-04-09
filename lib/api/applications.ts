@@ -1,7 +1,6 @@
 import apiClient from './client';
 import type {
-  CandidateApplication,
-  CompanyApplicationDetail,
+  JobApplication,
   ApplicationComment,
   ApplicationResumeResponse,
   ApplyToJobDto,
@@ -13,12 +12,10 @@ import type {
 
 export const applicationsApi = {
   /**
-   * POST /api/v1/candidate/applications
    * Submits a candidate application for a job.
-   * Guards: JWT
    */
   apply: async (data: ApplyToJobDto) => {
-    const res = await apiClient.post<CandidateApplication>(
+    const res = await apiClient.post<JobApplication>(
       '/v1/candidate/applications',
       data
     );
@@ -26,27 +23,18 @@ export const applicationsApi = {
   },
 
   /**
-   * GET /api/v1/candidate/applications
    * Returns paginated applications for the authenticated candidate.
-   * Guards: JWT
    */
   listCandidateApplications: async (params?: PaginationParams) => {
-    const resolvedParams: PaginationParams = {
-      page: params?.page ?? 1,
-      limit: params?.limit ?? 100,
-    };
-
-    const res = await apiClient.get<PaginatedResponse<CandidateApplication>>(
+    const res = await apiClient.get<PaginatedResponse<JobApplication>>(
       '/v1/candidate/applications',
-      { params: resolvedParams }
+      { params }
     );
     return res.data;
   },
 
   /**
-   * PATCH /api/v1/candidate/applications/:applicationId/withdraw
    * Withdraws an existing candidate application.
-   * Guards: JWT
    */
   withdraw: async (applicationId: string) => {
     const res = await apiClient.patch<{ message: string }>(
@@ -56,12 +44,10 @@ export const applicationsApi = {
   },
 
   /**
-   * GET /api/v1/companies/:companyId/applications
-   * Returns paginated applications received by a company.
-   * Guards: JWT + CompanyMembership
+   * Returns paginated applications for a company.
    */
   listCompanyApplications: async (companyId: string, params?: PaginationParams) => {
-    const res = await apiClient.get<PaginatedResponse<CompanyApplicationDetail>>(
+    const res = await apiClient.get<PaginatedResponse<JobApplication>>(
       `/v1/companies/${companyId}/applications`,
       { params }
     );
@@ -69,16 +55,24 @@ export const applicationsApi = {
   },
 
   /**
-   * PATCH /api/v1/companies/:companyId/applications/:applicationId/status
-   * Accepts or rejects a candidate application.
-   * Guards: JWT + CompanyMembership + Role (OWNER, ADMIN, RECRUITER)
+   * Returns a company-scoped application detail by id.
+   */
+  getCompanyApplicationDetail: async (companyId: string, applicationId: string) => {
+    const res = await apiClient.get<JobApplication>(
+      `/v1/companies/${companyId}/applications/${applicationId}`
+    );
+    return res.data;
+  },
+
+  /**
+   * Updates application status to ACCEPTED or REJECTED.
    */
   updateStatus: async (
     companyId: string,
     applicationId: string,
     data: UpdateApplicationStatusDto
   ) => {
-    const res = await apiClient.patch<CompanyApplicationDetail>(
+    const res = await apiClient.patch<JobApplication>(
       `/v1/companies/${companyId}/applications/${applicationId}/status`,
       data
     );
@@ -86,9 +80,7 @@ export const applicationsApi = {
   },
 
   /**
-   * POST /api/v1/companies/:companyId/applications/:applicationId/comments
    * Adds a company-side comment to an application.
-   * Guards: JWT + CompanyMembership
    */
   addComment: async (
     companyId: string,
@@ -103,9 +95,7 @@ export const applicationsApi = {
   },
 
   /**
-   * GET /api/v1/companies/:companyId/applications/:applicationId/comments
    * Returns all comments for an application scoped to a company.
-   * Guards: JWT + CompanyMembership
    */
   listComments: async (companyId: string, applicationId: string) => {
     const res = await apiClient.get<ApplicationComment[]>(
@@ -115,9 +105,7 @@ export const applicationsApi = {
   },
 
   /**
-   * GET /api/v1/companies/:companyId/applications/:applicationId/resume
    * Returns a signed download URL for an application's attached resume.
-   * Guards: JWT + CompanyMembership
    */
   getApplicationResume: async (companyId: string, applicationId: string) => {
     const res = await apiClient.get<ApplicationResumeResponse>(
@@ -127,18 +115,5 @@ export const applicationsApi = {
   },
 };
 
-/**
- * GET /api/v1/companies/:companyId/applications/:applicationId
- * Returns full application detail including screening questions
- * and candidate profile information (name, phone, linkedin, portfolio).
- * Guards: JWT + CompanyMembership
- */
-export async function getCompanyApplicationDetail(
-  companyId: string,
-  applicationId: string
-): Promise<CompanyApplicationDetail> {
-  const res = await apiClient.get<CompanyApplicationDetail>(
-    `/v1/companies/${companyId}/applications/${applicationId}`
-  );
-  return res.data;
-}
+export const getCompanyApplicationDetail = (companyId: string, applicationId: string) =>
+  applicationsApi.getCompanyApplicationDetail(companyId, applicationId);

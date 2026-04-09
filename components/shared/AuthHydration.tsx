@@ -14,7 +14,7 @@ export default function AuthHydration() {
   useEffect(() => {
     hydrate();
     hydrateCompany();
-  }, [hydrate, hydrateCompany]);
+  }, [hydrate, hydrateCompany]);//will only runs once on every reload called via layout.jsx 
 
   useEffect(() => {
     if (!isHydrated || !isAuthenticated || hasAttemptedProfileLoad) {

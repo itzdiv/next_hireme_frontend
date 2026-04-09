@@ -12,7 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { toast } from 'sonner';
 import { Loader2, Building2, Link as LinkIcon } from 'lucide-react';
 import Navbar from '@/components/shared/Navbar';
-import { DashboardFooter } from '@/components/layout/DashboardFooter';
 
 export default function NewCompanyPage() {
   const router = useRouter();
@@ -34,15 +33,14 @@ export default function NewCompanyPage() {
 
   if (!isHydrated || !isAuthenticated) {
     return (
-      <div className="flex min-h-screen flex-col bg-background">
+      <div className="min-h-screen bg-background">
         <Navbar />
-        <div className="flex-1 flex items-center justify-center py-32">
+        <div className="flex items-center justify-center py-32">
           <div className="animate-pulse space-y-4 text-center">
             <div className="h-16 w-16 bg-muted rounded-2xl mx-auto" />
             <div className="h-8 w-48 bg-muted rounded mx-auto" />
           </div>
         </div>
-        <DashboardFooter />
       </div>
     );
   }
@@ -68,13 +66,12 @@ export default function NewCompanyPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
-      <main className="flex-1">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
         <div className="mb-8 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500/20 to-indigo-500/20 mb-4 shadow-lg shadow-blue-500/10">
-            <Building2 className="h-8 w-8 text-blue-500" />
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-indigo-500/20 mb-4 shadow-lg shadow-violet-500/10">
+            <Building2 className="h-8 w-8 text-violet-500" />
           </div>
           <h1 className="text-3xl font-bold tracking-tight">Create Your Company</h1>
           <p className="mt-2 text-muted-foreground">
@@ -159,10 +156,6 @@ export default function NewCompanyPage() {
           </form>
         </Card>
       </div>
-      </main>
-      <DashboardFooter />
     </div>
   );
 }
-
-

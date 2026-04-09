@@ -4,8 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { applicationsApi } from '@/lib/api/applications';
 import { getApiErrorMessage } from '@/lib/utils';
 import type {
-  CandidateApplication,
-  CompanyApplicationDetail,
+  JobApplication,
   ApplicationComment,
   ApplicationResumeResponse,
   ApplyToJobDto,
@@ -19,7 +18,7 @@ import type {
  * Lists applications submitted by the current candidate.
  */
 export function useCandidateApplications(params?: PaginationParams) {
-  const [data, setData] = useState<PaginatedResponse<CandidateApplication> | null>(null);
+  const [data, setData] = useState<PaginatedResponse<JobApplication> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,7 +50,7 @@ export function useCompanyApplications(
   companyId: string | null,
   params?: PaginationParams
 ) {
-  const [data, setData] = useState<PaginatedResponse<CompanyApplicationDetail> | null>(null);
+  const [data, setData] = useState<PaginatedResponse<JobApplication> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

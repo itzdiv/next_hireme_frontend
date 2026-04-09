@@ -9,9 +9,7 @@ import type {
 
 export const questionBanksApi = {
   /**
-   * POST /api/v1/companies/:companyId/question-banks
    * Creates a question bank for a company.
-   * Guards: JWT, CompanyMembership, Role(OWNER | ADMIN | RECRUITER)
    */
   create: async (companyId: string, data: CreateQuestionBankDto) => {
     const res = await apiClient.post<QuestionBank>(
@@ -22,9 +20,7 @@ export const questionBanksApi = {
   },
 
   /**
-   * GET /api/v1/companies/:companyId/question-banks
    * Lists question banks for a company.
-   * Guards: JWT, CompanyMembership
    */
   list: async (companyId: string, params?: PaginationParams) => {
     const res = await apiClient.get<PaginatedResponse<QuestionBank>>(
@@ -35,9 +31,7 @@ export const questionBanksApi = {
   },
 
   /**
-   * GET /api/v1/companies/:companyId/question-banks/:questionBankId
    * Returns one question bank by id.
-   * Guards: JWT, CompanyMembership
    */
   get: async (companyId: string, qbId: string) => {
     const res = await apiClient.get<QuestionBank>(
@@ -47,9 +41,7 @@ export const questionBanksApi = {
   },
 
   /**
-   * PATCH /api/v1/companies/:companyId/question-banks/:questionBankId
    * Partially updates a question bank.
-   * Guards: JWT, CompanyMembership, Role(OWNER | ADMIN | RECRUITER)
    */
   update: async (companyId: string, qbId: string, data: UpdateQuestionBankDto) => {
     const res = await apiClient.patch<QuestionBank>(

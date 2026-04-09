@@ -35,7 +35,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${inter.variable} ${geistMono.variable} min-h-screen subpixel-antialiased font-satoshi`}
+        className={`${inter.variable} ${geistMono.variable} subpixel-antialiased font-satoshi`}
       >
         <AuthHydration />
         {children}
@@ -45,11 +45,9 @@ export default function RootLayout({
           closeButton
           toastOptions={{
             style: {
-              background: 'var(--card)',
-              border: '1px solid var(--border)',
-              color: 'var(--foreground)',
-              opacity: 1,
-              backdropFilter: 'none',
+              background: 'hsl(var(--card))',
+              border: '1px solid hsl(var(--border))',
+              color: 'hsl(var(--foreground))',
             },
           }}
         />

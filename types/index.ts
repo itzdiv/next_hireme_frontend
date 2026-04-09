@@ -38,16 +38,6 @@ export enum ApplicationStatus {
 
 // ─── Entity Interfaces ───────────────────────────────────
 
-/** Shape returned by GET /api/v1/companies/me */
-export interface MyCompanyMembership {
-  membership_id: string;
-  company_id: string;
-  company_name: string;
-  company_logo_url: string | null;
-  role: MemberRole;
-  status: MemberStatus;
-}
-
 export interface User {
   id: string;
   email: string;
@@ -75,9 +65,8 @@ export interface Resume {
   user_id: string;
   title: string | null;
   file_url: string;
-  file_name?: string;
+  file_name?: string | null;
   file_size_bytes?: number;
-  is_used_in_applications?: boolean;
   is_primary: boolean;
   created_at: string;
   updated_at: string;
@@ -99,6 +88,8 @@ export interface CompanyMember {
   company_id: string;
   user_id: string;
   email: string;
+  company_name: string;
+  company_logo_url: string | null;
   role: MemberRole;
   status: MemberStatus;
   invited_by: string | null;
@@ -147,21 +138,7 @@ export interface JobListing {
   updated_at: string;
 }
 
-/**
- * Comment shape returned inside CandidateApplication.comments.
- * Only includes comments where visible_to_candidate = true.
- */
-export interface CandidateVisibleComment {
-  id: string;
-  comment: string;
-  created_at: string;
-}
-
-/**
- * Shape returned by GET /api/v1/candidate/applications
- * Represents a single application from the candidate's perspective.
- */
-export interface CandidateApplication {
+export interface JobApplication {
   id: string;
   job_id: string;
   company_id: string;
@@ -171,55 +148,30 @@ export interface CandidateApplication {
   video_url: string | null;
   status: ApplicationStatus;
   status_changed_by: string | null;
-  applied_at: string;
-  last_updated_at: string;
+  created_at: string;
+  updated_at: string;
+  // Joined fields (candidate-side)
   job: {
     id: string;
     title: string;
     company_name: string;
-    application_mode: ApplicationMode;
-    screening_questions_json: Question[] | null;
+    application_mode?: ApplicationMode;
+    screening_questions_json?: Question[] | null;
   };
-  comments: CandidateVisibleComment[];
-  created_at: string;
-  updated_at: string;
-}
-
-/**
- * Shape returned by GET /api/v1/companies/:companyId/applications
- * Represents a single application from the company/recruiter perspective.
- */
-export interface CompanyApplication {
-  id: string;
-  job_id: string;
-  company_id: string;
-  user_id: string;
-  resume_id: string | null;
-  answers_json: Record<string, unknown> | null;
-  video_url: string | null;
-  status: ApplicationStatus;
-  status_changed_by: string | null;
-  candidate_email: string;
-  job_title: string;
-  resume_url: string;
-  comments_count: number;
-  created_at: string;
-  updated_at: string;
-}
-
-/**
- * Full detail shape used when viewing a single application on the company side.
- * Includes screening questions, candidate profile fields, and application mode.
- * The four candidate_* fields come from the per-application detail endpoint and
- * may be null if the candidate has not completed their profile.
- */
-export interface CompanyApplicationDetail extends CompanyApplication {
-  application_mode: ApplicationMode;
-  screening_questions_json: Question[] | null;
-  candidate_name: string | null;
-  candidate_linkedin_url: string | null;
-  candidate_portfolio_url: string | null;
-  candidate_phone: string | null;
+  comments?: ApplicationComment[];
+  applied_at?: string;
+  last_updated_at?: string;
+  // Joined fields (company-side)
+  candidate_email?: string;
+  candidate_name?: string;
+  candidate_phone?: string | null;
+  candidate_linkedin_url?: string | null;
+  candidate_portfolio_url?: string | null;
+  job_title?: string;
+  application_mode?: ApplicationMode;
+  screening_questions_json?: Question[] | null;
+  resume_url?: string;
+  comments_count?: number;
 }
 
 export interface ApplicationComment {
@@ -325,9 +277,7 @@ export interface UpdateJobDto {
   employment_type?: string;
   application_mode?: ApplicationMode;
   visibility?: JobVisibility;
-  status?: JobStatus;
   application_deadline?: string;
-  question_bank_id?: string;
 }
 
 export interface UpdateJobStatusDto {
@@ -342,7 +292,7 @@ export interface ApplyToJobDto {
 }
 
 export interface UpdateApplicationStatusDto {
-  status: ApplicationStatus.ACCEPTED | ApplicationStatus.REJECTED;
+  status: 'ACCEPTED' | 'REJECTED';
 }
 
 export interface CreateCommentDto {
@@ -392,3 +342,9 @@ export interface ApiError {
   message: string;
   error: string;
 }
+
+// ─── Backward-Compatibility Aliases ─────────────────────
+
+export type CandidateApplication = JobApplication;
+export type CompanyApplicationDetail = JobApplication;
+export type MyCompanyMembership = CompanyMember;

@@ -1,17 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowRight,
   PlayCircle,
+  Briefcase,
   Users,
   Database,
   CheckCircle2,
   UserSearch,
 } from 'lucide-react';
 import Navbar from '@/components/shared/Navbar';
-import { PublicFooter } from '@/components/layout/PublicFooter';
 
 type Kpi = {
   label: string;
@@ -77,6 +77,25 @@ const faqItems = [
   },
 ];
 
+const footerColumns = [
+  {
+    title: 'Product',
+    links: ['Post a Job', 'Browse Jobs', 'Question Banks', 'API Docs'],
+  },
+  {
+    title: 'Resources',
+    links: ['API Reference', 'How It Works', 'For Recruiters', 'For Candidates'],
+  },
+  {
+    title: 'Company',
+    links: ['About', 'Customers', 'Careers', 'Contact'],
+  },
+  {
+    title: 'Legal',
+    links: ['Privacy', 'Terms'],
+  },
+];
+
 const applyModes = [
   {
     title: 'STANDARD',
@@ -138,10 +157,10 @@ export default function LandingPage() {
   }, [hasAnimated]);
 
   return (
-    <div className="font-satoshi flex min-h-screen flex-col bg-white text-slate-900">
+    <div className="font-satoshi min-h-screen bg-white text-slate-900">
       <Navbar />
 
-      <main className="flex-1">
+      <main>
         <section className="enterprise-grid animate-fade-in-up relative overflow-hidden px-6 pt-32 pb-32">
           <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
             <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-[#eff6ff] px-4 py-2 text-sm font-medium text-blue-700">
@@ -452,7 +471,49 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <PublicFooter />
+      <footer className="border-t border-[#e2e8f0] bg-white px-6 py-16">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-8 md:grid-cols-6">
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/25">
+                  <Briefcase className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-lg font-extrabold tracking-[-0.02em] text-slate-900">HireMe</span>
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-slate-600">Tower 4, Cyber City, Bengaluru, India</p>
+              <div className="mt-5 flex gap-3">
+                <span className="h-8 w-8 rounded-lg border border-[#e2e8f0] bg-slate-50" />
+                <span className="h-8 w-8 rounded-lg border border-[#e2e8f0] bg-slate-50" />
+                <span className="h-8 w-8 rounded-lg border border-[#e2e8f0] bg-slate-50" />
+              </div>
+            </div>
+
+            {footerColumns.map((column) => (
+              <div key={column.title}>
+                <h3 className="text-sm font-bold tracking-[-0.02em] text-slate-900">{column.title}</h3>
+                <ul className="mt-4 space-y-2">
+                  {column.links.map((link) => (
+                    <li key={link} className="text-sm text-slate-600">
+                      <a href="#" className="transition-colors hover:text-slate-900">
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-[#e2e8f0] pt-5">
+            <p className="text-sm text-slate-500">© 2026 HireMe, Inc. All rights reserved.</p>
+            <div className="inline-flex items-center gap-2 rounded-full bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-[#16a34a]" />
+              System Status: Operational
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

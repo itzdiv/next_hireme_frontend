@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { companyApi } from '@/lib/api/company';
-import { useAuthStore } from '@/lib/store';
 import { getApiErrorMessage } from '@/lib/utils';
 import type {
   Company,
@@ -15,37 +14,6 @@ import type {
   PaginatedResponse,
   PaginationParams,
 } from '@/types';
-
-/**
- * Fetches all companies the logged-in user is a member of.
- * Only fires when authenticated & hydrated.
- */
-export function useMyCompanies() {
-  const { isAuthenticated, isHydrated } = useAuthStore();
-  const [data, setData] = useState<MyCompanyMembership[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetch = useCallback(async () => {
-    if (!isAuthenticated) return;
-    setLoading(true);
-    try {
-      const result = await companyApi.getMyCompanies();
-      setData(result);
-    } catch {
-      setData([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (isHydrated && isAuthenticated) {
-      fetch();
-    }
-  }, [isHydrated, isAuthenticated, fetch]);
-
-  return { data, loading, refetch: fetch };
-}
 
 /**
  * Fetches details for a company.
@@ -99,6 +67,36 @@ export function useMembers(companyId: string | null, params?: PaginationParams) 
       setLoading(false);
     }
   }, [companyId, params]);
+
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+
+  return { data, loading, error, refetch: fetch };
+}
+
+/**
+ * Lists companies for the authenticated user.
+ */
+export function useMyCompanies() {
+  const [data, setData] = useState<MyCompanyMembership[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetch = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await companyApi.listMyCompanies();
+      setData(result);
+    } catch (err: unknown) {
+      const message = getApiErrorMessage(err, 'Failed to fetch companies');
+      setError(message);
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     fetch();

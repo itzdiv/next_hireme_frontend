@@ -13,19 +13,7 @@ import type {
 
 export const companyApi = {
   /**
-   * GET /api/v1/companies/me
-   * Returns all companies where the logged-in user is an ACTIVE member.
-   * Guards: JWT
-   */
-  getMyCompanies: async () => {
-    const res = await apiClient.get<{ data: MyCompanyMembership[] }>('/v1/companies/me');
-    return res.data.data;
-  },
-
-  /**
-   * POST /api/v1/companies
    * Creates a company and assigns the creator as OWNER.
-   * Guards: JWT
    */
   create: async (data: CreateCompanyDto) => {
     const res = await apiClient.post<Company>('/v1/companies', data);
@@ -33,9 +21,7 @@ export const companyApi = {
   },
 
   /**
-   * GET /api/v1/companies/:companyId
    * Fetches company details for the provided company id.
-   * Guards: JWT, CompanyMembership
    */
   get: async (companyId: string) => {
     const res = await apiClient.get<Company>(`/v1/companies/${companyId}`);
@@ -43,9 +29,15 @@ export const companyApi = {
   },
 
   /**
-   * PATCH /api/v1/companies/:companyId
+   * Lists companies where the authenticated user has membership.
+   */
+  listMyCompanies: async () => {
+    const res = await apiClient.get<MyCompanyMembership[]>('/v1/companies/my-companies');
+    return res.data;
+  },
+
+  /**
    * Partially updates company profile fields.
-   * Guards: JWT, CompanyMembership, Role(OWNER | ADMIN)
    */
   update: async (companyId: string, data: UpdateCompanyDto) => {
     const res = await apiClient.patch<Company>(`/v1/companies/${companyId}`, data);
@@ -53,9 +45,7 @@ export const companyApi = {
   },
 
   /**
-   * POST /api/v1/companies/:companyId/members
    * Invites an existing user to a company membership.
-   * Guards: JWT, CompanyMembership, Role(OWNER | ADMIN)
    */
   inviteMember: async (companyId: string, data: InviteMemberDto) => {
     const res = await apiClient.post<CompanyMember>(
@@ -66,9 +56,7 @@ export const companyApi = {
   },
 
   /**
-   * GET /api/v1/companies/:companyId/members
    * Lists members of a company.
-   * Guards: JWT, CompanyMembership
    */
   listMembers: async (companyId: string, params?: PaginationParams) => {
     const res = await apiClient.get<PaginatedResponse<CompanyMember>>(
@@ -79,9 +67,7 @@ export const companyApi = {
   },
 
   /**
-   * PATCH /api/v1/companies/:companyId/members/:memberId/role
    * Updates the role of a company membership.
-   * Guards: JWT, CompanyMembership, Role(OWNER)
    */
   updateMemberRole: async (companyId: string, memberId: string, data: UpdateRoleDto) => {
     const res = await apiClient.patch<CompanyMember>(
@@ -92,9 +78,7 @@ export const companyApi = {
   },
 
   /**
-   * DELETE /api/v1/companies/:companyId/members/:memberId
    * Revokes a company member's access.
-   * Guards: JWT, CompanyMembership, Role(OWNER | ADMIN)
    */
   revokeMember: async (companyId: string, memberId: string) => {
     const res = await apiClient.delete<{ message: string }>(
@@ -104,9 +88,7 @@ export const companyApi = {
   },
 
   /**
-   * POST /api/v1/companies/:companyId/members/:memberId/transfer-ownership
    * Transfers company ownership to another active member.
-   * Guards: JWT, CompanyMembership, Role(OWNER)
    */
   transferOwnership: async (companyId: string, memberId: string) => {
     const res = await apiClient.post<{ message: string }>(

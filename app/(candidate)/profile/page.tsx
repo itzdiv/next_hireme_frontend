@@ -1,7 +1,6 @@
 ﻿'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 import { useProfile, useCreateProfile, useUpdateProfile } from '@/lib/hooks/useCandidate';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,20 +9,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
-import { Loader2, Save, User, Link as LinkIcon, Phone, Pencil, X } from 'lucide-react';
+import { Loader2, Save, User, Link as LinkIcon, Phone } from 'lucide-react';
 
 /**
  * Creates or updates the authenticated candidate profile.
  */
 export default function ProfilePage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const returnTo = searchParams.get('returnTo');
-  const shouldStartInEdit = searchParams.get('edit') === 'true';
   const { data: profile, loading, notFound, refetch } = useProfile();
   const { mutate: createProfile, loading: creating } = useCreateProfile();
   const { mutate: updateProfile, loading: updating } = useUpdateProfile();
-  const [isEditing, setIsEditing] = useState(false);
 
   const [draft, setDraft] = useState<Partial<{
     full_name: string;
@@ -42,15 +36,6 @@ export default function ProfilePage() {
     portfolio_url: draft.portfolio_url ?? profile?.portfolio_url ?? '',
     phone: draft.phone ?? profile?.phone ?? '',
   };
-  const isCreateMode = notFound;
-  const isReadOnly = !isCreateMode && !isEditing;
-  const isFullNameValid = form.full_name.trim().length >= 2;
-
-  useEffect(() => {
-    if (shouldStartInEdit) {
-      setIsEditing(true);
-    }
-  }, [shouldStartInEdit]);
 
   /**
    * Submits the profile form in create or update mode based on profile existence.
@@ -80,13 +65,7 @@ export default function ProfilePage() {
         toast.success('Profile updated!');
       }
       setDraft({});
-      setIsEditing(false);
-      await refetch();
-      if (returnTo) {
-        router.push(decodeURIComponent(returnTo));
-      } else {
-        router.push('/jobs');
-      }
+      refetch();
     } catch {
       toast.error('Failed to save profile');
     }
@@ -96,7 +75,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="flex flex-1 flex-col space-y-4">
+      <div className="space-y-4">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-64 rounded-xl" />
       </div>
@@ -104,10 +83,10 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold">
-          {notFound ? 'Create Your Profile' : 'Profile'}
+          {notFound ? 'Create Your Profile' : 'Edit Profile'}
         </h1>
         <p className="mt-2 text-muted-foreground">
           {notFound
@@ -118,33 +97,10 @@ export default function ProfilePage() {
 
       <Card className="border-border/40">
         <CardHeader>
-          <div className="flex items-center justify-between gap-3">
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
-              Personal Information
-            </CardTitle>
-            {!isCreateMode && (
-              isEditing ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setDraft({});
-                    setIsEditing(false);
-                  }}
-                  disabled={isSubmitting}
-                >
-                  <X className="mr-2 h-4 w-4" />
-                  Cancel
-                </Button>
-              ) : (
-                <Button type="button" variant="outline" onClick={() => setIsEditing(true)}>
-                  <Pencil className="mr-2 h-4 w-4" />
-                  Edit Profile
-                </Button>
-              )
-            )}
-          </div>
+          <CardTitle className="flex items-center gap-2">
+            <User className="h-5 w-5" />
+            Personal Information
+          </CardTitle>
           <CardDescription>This info is visible to recruiters when you apply.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -159,12 +115,10 @@ export default function ProfilePage() {
                   placeholder="John Doe"
                   required
                   minLength={2}
-                  disabled={isReadOnly || isSubmitting}
-                  className={isReadOnly ? 'bg-muted/60 text-muted-foreground' : undefined}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone (optional)</Label>
+                <Label htmlFor="phone">Phone</Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -172,29 +126,26 @@ export default function ProfilePage() {
                     value={form.phone}
                     onChange={(e) => setDraft((current) => ({ ...current, phone: e.target.value }))}
                     placeholder="+91-9876543210"
-                    className={`pl-10 ${isReadOnly ? 'bg-muted/60 text-muted-foreground' : ''}`}
-                    disabled={isReadOnly || isSubmitting}
+                    className="pl-10"
                   />
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bio">Bio (optional)</Label>
+              <Label htmlFor="bio">Bio</Label>
               <Textarea
                 id="bio"
                 value={form.bio}
                 onChange={(e) => setDraft((current) => ({ ...current, bio: e.target.value }))}
                 placeholder="A short professional summary..."
                 rows={4}
-                disabled={isReadOnly || isSubmitting}
-                className={isReadOnly ? 'bg-muted/60 text-muted-foreground' : undefined}
               />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="linkedin_url">LinkedIn URL (optional)</Label>
+                <Label htmlFor="linkedin_url">LinkedIn URL</Label>
                 <div className="relative">
                   <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -202,13 +153,12 @@ export default function ProfilePage() {
                     value={form.linkedin_url}
                     onChange={(e) => setDraft((current) => ({ ...current, linkedin_url: e.target.value }))}
                     placeholder="https://linkedin.com/in/..."
-                    className={`pl-10 ${isReadOnly ? 'bg-muted/60 text-muted-foreground' : ''}`}
-                    disabled={isReadOnly || isSubmitting}
+                    className="pl-10"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="portfolio_url">Portfolio URL (optional)</Label>
+                <Label htmlFor="portfolio_url">Portfolio URL</Label>
                 <div className="relative">
                   <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -216,45 +166,39 @@ export default function ProfilePage() {
                     value={form.portfolio_url}
                     onChange={(e) => setDraft((current) => ({ ...current, portfolio_url: e.target.value }))}
                     placeholder="https://yoursite.dev"
-                    className={`pl-10 ${isReadOnly ? 'bg-muted/60 text-muted-foreground' : ''}`}
-                    disabled={isReadOnly || isSubmitting}
+                    className="pl-10"
                   />
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="photo_url">Photo URL (optional)</Label>
+              <Label htmlFor="photo_url">Photo URL</Label>
               <Input
                 id="photo_url"
                 value={form.photo_url}
                 onChange={(e) => setDraft((current) => ({ ...current, photo_url: e.target.value }))}
                 placeholder="https://cdn.example.com/photo.jpg"
-                disabled={isReadOnly || isSubmitting}
-                className={isReadOnly ? 'bg-muted/60 text-muted-foreground' : undefined}
               />
             </div>
 
-            {(isCreateMode || isEditing) && (
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting || !isFullNameValid}
-                  className="bg-primary text-white hover:bg-primary-hover"
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Save className="mr-2 h-4 w-4" />
-                  )}
-                  {isCreateMode ? 'Create Profile' : 'Save Changes'}
-                </Button>
-              </div>
-            )}
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-linear-to-r from-violet-600 to-indigo-600 text-white"
+              >
+                {isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="mr-2 h-4 w-4" />
+                )}
+                {notFound ? 'Create Profile' : 'Save Changes'}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
     </div>
   );
 }
-

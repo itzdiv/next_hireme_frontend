@@ -13,10 +13,12 @@ const apiClient = axios.create({
 
 const inFlight = new Map<string, Promise<unknown>>();
 
+//axios get request is handled later and switched with dedup function 
 const originalGet = apiClient.get.bind(apiClient);
 
 // @ts-expect-error — we override the generic get to add dedup logic
 apiClient.get = function dedupGet(url: string, config?: object) {
+  //makes sure that save request but with different params is not clubbed as same one!
   const key = url + (config ? JSON.stringify(config) : '');
 
   const existing = inFlight.get(key);
