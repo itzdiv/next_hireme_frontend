@@ -130,11 +130,14 @@
 
 /* ─── Premium Gradient Button ─────────────────────────── */
 .btn-gradient {
-  @apply bg-linear-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300;
+  @apply bg-linear-to-r text-white shadow-lg transition-all duration-300;
+  background-image: linear-gradient(to right, oklch(0.56 0.23 295), oklch(0.52 0.2 275));
+  box-shadow: 0 10px 24px oklch(0.56 0.23 295 / 0.25);
 }
 
 .btn-gradient:hover {
   filter: brightness(1.05);
+  box-shadow: 0 12px 28px oklch(0.56 0.23 295 / 0.4);
 }
 
 /* ─── Glassmorphic Panel ──────────────────────────────── */
@@ -156,13 +159,14 @@
 .badge-withdrawn { @apply bg-gray-50 text-gray-500 border-gray-200; }
 .badge-invited { @apply bg-amber-50 text-amber-700 border-amber-200; }
 .badge-revoked { @apply bg-red-50 text-red-700 border-red-200; }
-.badge-owner { @apply bg-violet-50 text-violet-700 border-violet-200; }
-.badge-admin { @apply bg-indigo-50 text-indigo-700 border-indigo-200; }
+.badge-owner { @apply bg-primary/10 text-primary border-primary/30; }
+.badge-admin { @apply bg-secondary text-secondary-foreground border-border; }
 .badge-recruiter { @apply bg-blue-50 text-blue-700 border-blue-200; }
 
 /* ─── Premium Card Hover Effect ───────────────────────── */
 .card-hover {
-  @apply transition-all duration-300 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5 hover:-translate-y-0.5;
+  @apply transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5;
+  --tw-shadow-color: oklch(0.56 0.23 295 / 0.08);
 }
 
 /* ─── Animate Shimmer for Skeletons ───────────────────── */

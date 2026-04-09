@@ -278,6 +278,7 @@ export interface UpdateJobDto {
   application_mode?: ApplicationMode;
   visibility?: JobVisibility;
   application_deadline?: string;
+  question_bank_id?: string;
 }
 
 export interface UpdateJobStatusDto {
